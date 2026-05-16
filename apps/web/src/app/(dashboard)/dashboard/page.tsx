@@ -1,319 +1,283 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+export const dynamic = 'force-dynamic';
+
 import { motion } from 'framer-motion';
 import {
-  FolderKanban, CheckSquare, AlertTriangle, Clock,
-  TrendingUp, Users, Bell, Activity,
+  Activity, Flame, Footprints, Car, CheckCircle2, Truck,
+  Handshake, XCircle, ChevronRight, Calendar, Plus,
+  MessageCircle, BarChart3,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Skeleton } from '@/components/ui/skeleton';
-import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend,
-} from 'recharts';
-import api from '@/lib/api';
-import { formatRelativeTime, statusColors, getInitials } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/store/auth-store';
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
-};
+// ---- Static demo data matching the reference screenshot ----
+const metrics = [
+  { key: 'totalLeads', label: 'Total Leads', value: 2, Icon: Activity, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  { key: 'hotLeads', label: 'Hot Leads', value: 0, Icon: Flame, color: 'text-orange-600', bg: 'bg-orange-50' },
+  { key: 'walkIns', label: 'Walk-Ins', value: 1, Icon: Footprints, color: 'text-amber-600', bg: 'bg-amber-50' },
+  { key: 'testDrives', label: 'Test Drives', value: 1, Icon: Car, color: 'text-sky-600', bg: 'bg-sky-50' },
+  { key: 'bookings', label: 'Bookings', value: 0, Icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  { key: 'deliveries', label: 'Deliveries', value: 0, Icon: Truck, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+  { key: 'negotiation', label: 'In Negotiation', value: 0, Icon: Handshake, color: 'text-purple-600', bg: 'bg-purple-50' },
+  { key: 'lost', label: 'Lost', value: 0, Icon: XCircle, color: 'text-rose-600', bg: 'bg-rose-50' },
+];
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-};
+const funnel = [
+  { label: 'Leads', value: 2, color: 'bg-emerald-500 text-white' },
+  { label: 'Test Drive', value: 1, color: 'bg-sky-500 text-white' },
+  { label: 'Booking', value: 0, color: 'bg-indigo-500 text-white' },
+  { label: 'Delivery', value: 0, color: 'bg-violet-500 text-white' },
+];
 
-const kpiIcons = {
-  totalProjects: { icon: FolderKanban, color: 'from-blue-500 to-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-  activeProjects: { icon: Activity, color: 'from-green-500 to-green-600', bg: 'bg-green-50 dark:bg-green-900/20' },
-  myTasks: { icon: CheckSquare, color: 'from-purple-500 to-purple-600', bg: 'bg-purple-50 dark:bg-purple-900/20' },
-  overdueTasksCount: { icon: AlertTriangle, color: 'from-red-500 to-red-600', bg: 'bg-red-50 dark:bg-red-900/20' },
-  completedTasksThisMonth: { icon: TrendingUp, color: 'from-teal-500 to-teal-600', bg: 'bg-teal-50 dark:bg-teal-900/20' },
-  pendingApprovals: { icon: Clock, color: 'from-orange-500 to-orange-600', bg: 'bg-orange-50 dark:bg-orange-900/20' },
-};
+const followUps = [
+  {
+    initials: 'NK',
+    name: 'Naveen Kotian',
+    phone: '9945754445',
+    leadId: 'LEAD-000019',
+    status: 'Test Drive Scheduled',
+    time: '09:12 PM',
+  },
+];
 
-const PIE_COLORS = ['#64748b', '#3b82f6', '#8b5cf6', '#f59e0b', '#22c55e', '#ef4444'];
+const brandPerformance = [
+  { name: 'ISUZU', leads: 4, bookings: 0, walkIns: 4, lost: 0, convPct: 0 },
+];
+
+const myPerformance = [
+  { id: 1, name: 'Venitha', branch: 'Main Branch', leads: 2, followUps: 1, walkIns: 1, bookings: 0, convPct: 0 },
+];
+
+const dateFilters = ['Today', 'This Week', 'This Month', 'Last 30 Days'];
 
 export default function DashboardPage() {
-  const { data: kpis, isLoading: kpisLoading } = useQuery({
-    queryKey: ['dashboard-kpis'],
-    queryFn: () => api.get('/dashboard/kpis').then((r) => r.data),
-  });
-
-  const { data: activity, isLoading: activityLoading } = useQuery({
-    queryKey: ['dashboard-activity'],
-    queryFn: () => api.get('/dashboard/activity').then((r) => r.data),
-  });
-
-  const { data: upcomingTasks } = useQuery({
-    queryKey: ['dashboard-upcoming'],
-    queryFn: () => api.get('/dashboard/upcoming-tasks').then((r) => r.data),
-  });
-
-  const { data: projectProgress } = useQuery({
-    queryKey: ['dashboard-projects'],
-    queryFn: () => api.get('/dashboard/project-progress').then((r) => r.data),
-  });
-
-  const { data: taskStatusChart } = useQuery({
-    queryKey: ['dashboard-task-status'],
-    queryFn: () => api.get('/dashboard/task-status-chart').then((r) => r.data),
-  });
-
-  const { data: monthlyCompletion } = useQuery({
-    queryKey: ['dashboard-monthly'],
-    queryFn: () => api.get('/dashboard/monthly-completion').then((r) => r.data),
-  });
-
-  const { data: teamUtilization } = useQuery({
-    queryKey: ['dashboard-team'],
-    queryFn: () => api.get('/dashboard/team-utilization').then((r) => r.data),
-  });
-
-  const kpiLabels: Record<string, string> = {
-    totalProjects: 'Total Projects',
-    activeProjects: 'Active Projects',
-    myTasks: 'My Open Tasks',
-    overdueTasksCount: 'Overdue Tasks',
-    completedTasksThisMonth: 'Completed This Month',
-    pendingApprovals: 'Pending Approvals',
-  };
+  const { user } = useAuthStore();
+  const displayName = user?.firstName || 'Guest';
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-6"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35 }}
+      className="space-y-5"
     >
       {/* Page header */}
-      <motion.div variants={itemVariants}>
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground text-sm">
-          Welcome back! Here&apos;s what&apos;s happening today.
-        </p>
-      </motion.div>
-
-      {/* KPI Cards */}
-      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
-        {kpisLoading
-          ? Array.from({ length: 6 }).map((_, i) => (
-              <Card key={i}><CardContent className="p-4"><Skeleton className="h-16" /></CardContent></Card>
-            ))
-          : kpis && Object.entries(kpis).map(([key, value]) => {
-              const meta = kpiIcons[key as keyof typeof kpiIcons];
-              if (!meta) return null;
-              const Icon = meta.icon;
-              return (
-                <Card key={key} className="overflow-hidden hover:shadow-md transition-shadow">
-                  <CardContent className="p-4">
-                    <div className={`inline-flex p-2 rounded-lg ${meta.bg} mb-3`}>
-                      <Icon className={`h-4 w-4 bg-gradient-to-br ${meta.color} bg-clip-text`} />
-                    </div>
-                    <div className="text-2xl font-bold">{value as number}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{kpiLabels[key]}</div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-      </motion.div>
-
-      {/* Charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Monthly completion area chart */}
-        <motion.div variants={itemVariants} className="lg:col-span-2">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">Task Completion Trend</CardTitle>
-              <CardDescription>Monthly completed tasks over the last 6 months</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {monthlyCompletion ? (
-                <ResponsiveContainer width="100%" height={200}>
-                  <AreaChart data={monthlyCompletion}>
-                    <defs>
-                      <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                    <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                    <YAxis tick={{ fontSize: 11 }} />
-                    <Tooltip />
-                    <Area type="monotone" dataKey="count" stroke="#22c55e" fill="url(#colorCount)" strokeWidth={2} />
-                  </AreaChart>
-                </ResponsiveContainer>
-              ) : (
-                <Skeleton className="h-[200px]" />
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Task status pie chart */}
-        <motion.div variants={itemVariants}>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">Tasks by Status</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {taskStatusChart ? (
-                <ResponsiveContainer width="100%" height={200}>
-                  <PieChart>
-                    <Pie
-                      data={taskStatusChart}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={50}
-                      outerRadius={80}
-                      dataKey="count"
-                      nameKey="status"
-                    >
-                      {taskStatusChart.map((_: any, index: number) => (
-                        <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend iconType="circle" iconSize={8} />
-                  </PieChart>
-                </ResponsiveContainer>
-              ) : (
-                <Skeleton className="h-[200px]" />
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3 flex-wrap">
+          <h1 className="text-xl font-bold tracking-tight">
+            My Dashboard — <span className="text-foreground/90">{displayName}</span>
+          </h1>
+          <Badge className="bg-rose-100 text-rose-700 hover:bg-rose-100 border-0 rounded-full px-2.5">● 1 Open</Badge>
+          <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-0 rounded-full px-2.5">● 1 Active</Badge>
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-1 rounded-full bg-muted p-1 text-xs">
+            {dateFilters.map((f, i) => (
+              <button
+                key={f}
+                className={`px-3 py-1 rounded-full transition ${
+                  i === 2 ? 'bg-background shadow-sm font-medium' : 'text-muted-foreground hover:bg-background/60'
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+          <Button variant="outline" size="sm" className="rounded-full text-emerald-700 border-emerald-200 bg-emerald-50 hover:bg-emerald-100">
+            <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> WhatsApp · Live
+          </Button>
+          <Button size="sm" className="rounded-full bg-rose-600 hover:bg-rose-700 text-white">
+            <Plus className="h-3.5 w-3.5 mr-1.5" /> Add Lead
+          </Button>
+        </div>
       </div>
 
-      {/* Bottom row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Project Progress */}
-        <motion.div variants={itemVariants} className="lg:col-span-1">
-          <Card className="h-full">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">Active Projects</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {projectProgress
-                ? projectProgress.slice(0, 6).map((p: any) => (
-                    <div key={p.id} className="space-y-1">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium truncate max-w-[160px]">{p.name}</span>
-                        <span className="text-muted-foreground text-xs">{p.taskProgress}%</span>
-                      </div>
-                      <Progress value={p.taskProgress} className="h-1.5" />
-                    </div>
-                  ))
-                : Array.from({ length: 4 }).map((_, i) => (
-                    <Skeleton key={i} className="h-8" />
-                  ))}
-            </CardContent>
-          </Card>
-        </motion.div>
+      {/* Performance Overview */}
+      <Card className="border-muted">
+        <CardHeader className="pb-3 flex flex-row items-center justify-between">
+          <CardTitle className="text-sm font-semibold flex items-center gap-2">
+            <BarChart3 className="h-4 w-4 text-emerald-600" /> Performance Overview
+          </CardTitle>
+          <span className="text-xs text-muted-foreground">01 May – 31 May 2026</span>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+            {metrics.map(({ key, label, value, Icon, color, bg }) => (
+              <div
+                key={key}
+                className="rounded-xl border bg-card p-3 flex items-center gap-3 hover:shadow-sm transition"
+              >
+                <div className={`${bg} ${color} rounded-lg p-2 shrink-0`}>
+                  <Icon className="h-5 w-5" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-2xl font-bold leading-none">{value}</div>
+                  <div className="text-[11px] text-muted-foreground mt-1 truncate">{label}</div>
+                </div>
+              </div>
+            ))}
+          </div>
 
-        {/* Upcoming Tasks */}
-        <motion.div variants={itemVariants} className="lg:col-span-1">
-          <Card className="h-full">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">Due Soon</CardTitle>
-              <CardDescription>Tasks due in the next 7 days</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {upcomingTasks
-                ? upcomingTasks.slice(0, 6).map((task: any) => (
-                    <div key={task.id} className="flex items-start gap-2 p-2 rounded-lg hover:bg-muted/50 transition-colors">
-                      <div
-                        className="h-2 w-2 rounded-full mt-1.5 shrink-0"
-                        style={{ backgroundColor: task.project?.color || '#3b82f6' }}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">{task.title}</p>
-                        <p className="text-xs text-muted-foreground">{task.project?.name}</p>
-                      </div>
-                      {task.dueDate && (
-                        <span className="text-xs text-orange-500 whitespace-nowrap">
-                          {new Date(task.dueDate).toLocaleDateString()}
-                        </span>
-                      )}
-                    </div>
-                  ))
-                : Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-12" />)}
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Recent Activity */}
-        <motion.div variants={itemVariants} className="lg:col-span-1">
-          <Card className="h-full">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">Recent Activity</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {activityLoading
-                ? Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-10" />)
-                : activity?.slice(0, 6).map((log: any) => (
-                    <div key={log.id} className="flex items-center gap-2 text-sm">
-                      <Avatar className="h-6 w-6 shrink-0">
-                        <AvatarImage src={log.user?.avatar} />
-                        <AvatarFallback className="text-[10px]">
-                          {getInitials(log.user?.firstName || 'U', log.user?.lastName || 'S')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <span className="font-medium">{log.user?.firstName}</span>{' '}
-                        <span className="text-muted-foreground">{log.action}</span>{' '}
-                        <span className="text-muted-foreground truncate">{log.entity}</span>
-                      </div>
-                      <span className="text-xs text-muted-foreground whitespace-nowrap">
-                        {formatRelativeTime(log.createdAt)}
-                      </span>
-                    </div>
-                  ))}
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-
-      {/* Team Utilization */}
-      <motion.div variants={itemVariants}>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Users className="h-4 w-4" /> Team Utilization
-            </CardTitle>
-            <CardDescription>Current workload across team members</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {teamUtilization
-                ? teamUtilization.slice(0, 12).map((member: any) => (
-                    <div key={member.id} className="flex flex-col items-center gap-2 p-3 rounded-lg bg-muted/30 hover:bg-muted/60 transition-colors">
-                      <Avatar className="h-10 w-10">
-                        <AvatarImage src={member.avatar} />
-                        <AvatarFallback className="text-xs bg-gradient-to-br from-green-400 to-blue-500 text-white">
-                          {getInitials(member.firstName, member.lastName)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="text-center">
-                        <p className="text-xs font-medium truncate max-w-full">{member.firstName}</p>
-                        <p className="text-xs text-muted-foreground">{member.activeTasks} tasks</p>
-                      </div>
-                      <Badge variant={member.totalTasks > 10 ? 'destructive' : 'secondary'} className="text-[10px] px-1.5">
-                        {member.totalTasks}
-                      </Badge>
-                    </div>
-                  ))
-                : Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-24" />)}
+          {/* Conversion funnel */}
+          <div className="mt-4 rounded-xl border bg-muted/30 p-3 flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-2 pr-4 border-r">
+              <BarChart3 className="h-4 w-4 text-emerald-600" />
+              <div>
+                <div className="text-xl font-bold leading-none">0.0%</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">Lead → Booking Conversion</div>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+            <div className="flex items-center gap-2 flex-wrap">
+              {funnel.map((s, i) => (
+                <div key={s.label} className="flex items-center gap-2">
+                  <div className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium ${s.color}`}>
+                    <span className="font-bold">{s.value}</span>
+                    <span>{s.label}</span>
+                  </div>
+                  {i < funnel.length - 1 && <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />}
+                </div>
+              ))}
+            </div>
+            <div className="ml-auto text-xs text-muted-foreground">Avg close: —</div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Today's Follow-Ups */}
+      <Card className="border-muted">
+        <CardHeader className="pb-3 flex flex-row items-center justify-between">
+          <CardTitle className="text-sm font-semibold flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-emerald-600" /> Today&apos;s Follow-Ups
+          </CardTitle>
+          <span className="text-xs text-muted-foreground">{followUps.length} pending</span>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {followUps.map((f, i) => (
+            <div
+              key={i}
+              className="flex items-center justify-between rounded-lg border bg-card p-3 hover:bg-muted/40 transition"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-md bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs font-semibold">
+                  {f.initials}
+                </div>
+                <div>
+                  <div className="text-sm font-medium">{f.name}</div>
+                  <div className="text-[11px] text-muted-foreground">
+                    {f.phone} · {f.leadId}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Badge className="bg-violet-100 text-violet-700 hover:bg-violet-100 border-0 rounded-full">
+                  {f.status}
+                </Badge>
+                <span className="text-xs text-muted-foreground tabular-nums">{f.time}</span>
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
+      {/* Brand Performance */}
+      <Card className="border-muted">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-semibold flex items-center gap-2">
+            <Car className="h-4 w-4 text-emerald-600" /> Brand Performance
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {brandPerformance.map((b) => (
+              <div key={b.name} className="rounded-xl border bg-card p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-base font-bold">{b.name}</div>
+                    <div className="text-[11px] text-muted-foreground">{b.leads} leads</div>
+                  </div>
+                  <Car className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <div className="mt-3 grid grid-cols-4 gap-2 text-center">
+                  <div>
+                    <div className="text-[11px] text-muted-foreground">Bookings</div>
+                    <div className="text-sm font-semibold">{b.bookings}</div>
+                  </div>
+                  <div>
+                    <div className="text-[11px] text-muted-foreground">Walk-Ins</div>
+                    <div className="text-sm font-semibold">{b.walkIns}</div>
+                  </div>
+                  <div>
+                    <div className="text-[11px] text-muted-foreground">Lost</div>
+                    <div className="text-sm font-semibold">{b.lost}</div>
+                  </div>
+                  <div>
+                    <div className="text-[11px] text-muted-foreground">Conv %</div>
+                    <div className="text-sm font-semibold">{b.convPct}%</div>
+                  </div>
+                </div>
+                <div className="mt-3 h-1.5 rounded-full bg-muted">
+                  <div className="h-full rounded-full bg-emerald-500" style={{ width: `${b.convPct}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* My Performance Table */}
+      <Card className="border-muted">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-semibold flex items-center gap-2">
+            <Activity className="h-4 w-4 text-emerald-600" /> My Performance
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="px-0">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-[11px] uppercase tracking-wide text-muted-foreground border-b">
+                  <th className="px-4 py-2 font-medium">#</th>
+                  <th className="px-4 py-2 font-medium">Executive</th>
+                  <th className="px-4 py-2 font-medium">Branch</th>
+                  <th className="px-4 py-2 font-medium">Leads</th>
+                  <th className="px-4 py-2 font-medium">Follow-ups</th>
+                  <th className="px-4 py-2 font-medium">Walk-Ins</th>
+                  <th className="px-4 py-2 font-medium">Bookings</th>
+                  <th className="px-4 py-2 font-medium">Conv %</th>
+                </tr>
+              </thead>
+              <tbody>
+                {myPerformance.map((row, i) => (
+                  <tr key={row.id} className="border-b last:border-0 hover:bg-muted/40">
+                    <td className="px-4 py-3 text-muted-foreground">{i + 1}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="h-7 w-7 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs font-semibold">
+                          {row.name.charAt(0)}
+                        </div>
+                        <span className="font-medium">{row.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.branch}</td>
+                    <td className="px-4 py-3 font-medium">{row.leads}</td>
+                    <td className="px-4 py-3 font-medium">{row.followUps}</td>
+                    <td className="px-4 py-3 font-medium">{row.walkIns}</td>
+                    <td className="px-4 py-3 font-medium">{row.bookings}</td>
+                    <td className="px-4 py-3">
+                      <Badge variant="outline" className="rounded-full text-[11px]">
+                        {row.convPct}%
+                      </Badge>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
     </motion.div>
   );
 }
