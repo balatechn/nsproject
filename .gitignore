@@ -11,5 +11,8 @@ coverage/
 .nyc_output/
 *.tsbuildinfo
 prisma/migrations/dev/
-uploads/
+# Ignore runtime upload storage dirs, but NOT source code modules named 'uploads'
+/uploads/
+apps/api/uploads/
+apps/web/uploads/
 .DS_Store
