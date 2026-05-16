@@ -1,0 +1,700 @@
+{
+  "Generated": "2026-05-16T17:56:53.3332808+05:30",
+  "Api": "http://bj8dch8qutl5jbr5q1sqp0rm.187.127.134.246.sslip.io",
+  "Counts": {
+    "Info": 1,
+    "Total": 98,
+    "Warn": 18,
+    "Fail": 4,
+    "Pass": 75
+  },
+  "Web": "http://carx7dk6yfwk3ysxe4uurbnm.187.127.134.246.sslip.io",
+  "Results": [
+    {
+      "Cat": "Connect",
+      "Name": "API /api/docs",
+      "Status": "PASS",
+      "Ms": 319,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "Connect",
+      "Name": "Web /",
+      "Status": "PASS",
+      "Ms": 181,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "Connect",
+      "Name": "Web /auth/login",
+      "Status": "PASS",
+      "Ms": 32,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "Auth",
+      "Name": "Login wrong password",
+      "Status": "PASS",
+      "Ms": 285,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "Auth",
+      "Name": "Login invalid email validation",
+      "Status": "WARN",
+      "Ms": 70,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "Auth",
+      "Name": "Login empty body validation",
+      "Status": "WARN",
+      "Ms": 43,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "Auth",
+      "Name": "Login valid credentials",
+      "Status": "PASS",
+      "Ms": 265,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "Auth",
+      "Name": "JWT token returned",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "token length 213"
+    },
+    {
+      "Cat": "Auth",
+      "Name": "RefreshToken returned",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": ""
+    },
+    {
+      "Cat": "Auth",
+      "Name": "Roles include SUPER_ADMIN",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "roles=SUPER_ADMIN"
+    },
+    {
+      "Cat": "Auth",
+      "Name": "GET /auth/me with JWT",
+      "Status": "PASS",
+      "Ms": 39,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "Auth",
+      "Name": "GET /auth/me unauth -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "Auth",
+      "Name": "Tampered JWT rejected",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/users -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/users",
+      "Status": "PASS",
+      "Ms": 41,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/projects -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/projects",
+      "Status": "PASS",
+      "Ms": 35,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/tasks -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/tasks",
+      "Status": "PASS",
+      "Ms": 38,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/crm/leads -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/crm/leads",
+      "Status": "PASS",
+      "Ms": 31,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/crm/pipeline -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/crm/pipeline",
+      "Status": "PASS",
+      "Ms": 29,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/crm/stats -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/crm/stats",
+      "Status": "PASS",
+      "Ms": 35,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/dashboard/kpis -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/dashboard/kpis",
+      "Status": "PASS",
+      "Ms": 57,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/dashboard/activity -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/dashboard/activity",
+      "Status": "FAIL",
+      "Ms": 34,
+      "Detail": "HTTP 500"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/dashboard/upcoming-tasks -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/dashboard/upcoming-tasks",
+      "Status": "FAIL",
+      "Ms": 29,
+      "Detail": "HTTP 500"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/dashboard/project-progress -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/dashboard/project-progress",
+      "Status": "PASS",
+      "Ms": 31,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/dashboard/task-status-chart -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/dashboard/task-status-chart",
+      "Status": "PASS",
+      "Ms": 26,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/dashboard/team-utilization -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/dashboard/team-utilization",
+      "Status": "PASS",
+      "Ms": 36,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/dashboard/monthly-completion -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/dashboard/monthly-completion",
+      "Status": "PASS",
+      "Ms": 42,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/notifications -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/notifications",
+      "Status": "PASS",
+      "Ms": 31,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/notifications/unread-count -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/notifications/unread-count",
+      "Status": "PASS",
+      "Ms": 31,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/workflows -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/workflows",
+      "Status": "PASS",
+      "Ms": 36,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/resources -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/resources",
+      "Status": "PASS",
+      "Ms": 37,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/admin/stats -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/admin/stats",
+      "Status": "PASS",
+      "Ms": 34,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/admin/audit-logs -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/admin/audit-logs",
+      "Status": "PASS",
+      "Ms": 29,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/admin/roles -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/admin/roles",
+      "Status": "PASS",
+      "Ms": 31,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/admin/settings -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/admin/settings",
+      "Status": "PASS",
+      "Ms": 38,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/reports/projects -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/reports/projects",
+      "Status": "PASS",
+      "Ms": 31,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/reports/resources -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/reports/resources",
+      "Status": "PASS",
+      "Ms": 29,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/reports/time -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/reports/time",
+      "Status": "PASS",
+      "Ms": 27,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/chat/rooms -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/chat/rooms",
+      "Status": "PASS",
+      "Ms": 27,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "RBAC",
+      "Name": "Unauth /api/v1/whatsapp/status -> 401",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "API",
+      "Name": "Auth GET /api/v1/whatsapp/status",
+      "Status": "PASS",
+      "Ms": 5050,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "CRUD",
+      "Name": "Create project",
+      "Status": "FAIL",
+      "Ms": 53,
+      "Detail": "HTTP 500 {\"statusCode\":500,\"message\":\"Internal server error\"}"
+    },
+    {
+      "Cat": "CRUD",
+      "Name": "Create CRM lead",
+      "Status": "PASS",
+      "Ms": 62,
+      "Detail": "HTTP 201 {\"id\":\"cmp8bm4ch00075jui82s0q5xa\",\"firstName\":\"QA\",\"lastName\":\"Lead\",\"email\":\"qa.lead@example.com\",\"phone\":\"5551234567\",\"company\":null,\"source\":\"WEBSITE\",\"status\":\"NEW\",\"priority\":\"MEDIUM\",\"value\":nul"
+    },
+    {
+      "Cat": "Sec",
+      "Name": "SQLi login attempt rejected",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 401"
+    },
+    {
+      "Cat": "Sec",
+      "Name": "XSS payload in lead",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "HTTP 201 (input handling — manual review needed for output encoding)"
+    },
+    {
+      "Cat": "Sec",
+      "Name": "CORS preflight",
+      "Status": "INFO",
+      "Ms": 0,
+      "Detail": "ACAO=http://localhost:3000 status=204"
+    },
+    {
+      "Cat": "Sec",
+      "Name": "Web header X-Frame-Options",
+      "Status": "WARN",
+      "Ms": 0,
+      "Detail": ""
+    },
+    {
+      "Cat": "Sec",
+      "Name": "Web header X-Content-Type-Options",
+      "Status": "WARN",
+      "Ms": 0,
+      "Detail": ""
+    },
+    {
+      "Cat": "Sec",
+      "Name": "Web header Strict-Transport-Security",
+      "Status": "WARN",
+      "Ms": 0,
+      "Detail": ""
+    },
+    {
+      "Cat": "Sec",
+      "Name": "Web header Content-Security-Policy",
+      "Status": "WARN",
+      "Ms": 0,
+      "Detail": ""
+    },
+    {
+      "Cat": "Sec",
+      "Name": "Web header Referrer-Policy",
+      "Status": "WARN",
+      "Ms": 0,
+      "Detail": ""
+    },
+    {
+      "Cat": "Sec",
+      "Name": "Rate limiting (20 bad logins)",
+      "Status": "WARN",
+      "Ms": 0,
+      "Detail": "0 / 20 returned 429"
+    },
+    {
+      "Cat": "Sec",
+      "Name": "HTTPS enabled",
+      "Status": "FAIL",
+      "Ms": 0,
+      "Detail": "Application served over plain HTTP only"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /",
+      "Status": "PASS",
+      "Ms": 74,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /auth/login",
+      "Status": "PASS",
+      "Ms": 26,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /auth/register",
+      "Status": "WARN",
+      "Ms": 32,
+      "Detail": "HTTP 404"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /auth/forgot-password",
+      "Status": "WARN",
+      "Ms": 39,
+      "Detail": "HTTP 404"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /dashboard",
+      "Status": "PASS",
+      "Ms": 70,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /projects",
+      "Status": "PASS",
+      "Ms": 40,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /tasks",
+      "Status": "WARN",
+      "Ms": 32,
+      "Detail": "HTTP 404"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /crm",
+      "Status": "PASS",
+      "Ms": 41,
+      "Detail": "HTTP 200"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /workflows",
+      "Status": "WARN",
+      "Ms": 31,
+      "Detail": "HTTP 404"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /reports",
+      "Status": "WARN",
+      "Ms": 40,
+      "Detail": "HTTP 404"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /team",
+      "Status": "WARN",
+      "Ms": 32,
+      "Detail": "HTTP 404"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /resources",
+      "Status": "WARN",
+      "Ms": 34,
+      "Detail": "HTTP 404"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /admin",
+      "Status": "WARN",
+      "Ms": 34,
+      "Detail": "HTTP 404"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /chat",
+      "Status": "WARN",
+      "Ms": 33,
+      "Detail": "HTTP 404"
+    },
+    {
+      "Cat": "Web",
+      "Name": "GET /settings",
+      "Status": "WARN",
+      "Ms": 33,
+      "Detail": "HTTP 404"
+    },
+    {
+      "Cat": "Perf",
+      "Name": "/api/v1/auth/me latency avg",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "avg=0ms max=0ms (5 samples)"
+    },
+    {
+      "Cat": "Perf",
+      "Name": "/api/v1/dashboard/kpis latency avg",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "avg=0ms max=0ms (5 samples)"
+    },
+    {
+      "Cat": "Perf",
+      "Name": "/api/v1/projects latency avg",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "avg=0ms max=0ms (5 samples)"
+    },
+    {
+      "Cat": "Perf",
+      "Name": "/api/v1/tasks latency avg",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "avg=0ms max=0ms (5 samples)"
+    },
+    {
+      "Cat": "Perf",
+      "Name": "/api/v1/crm/leads latency avg",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "avg=0ms max=0ms (5 samples)"
+    },
+    {
+      "Cat": "Perf",
+      "Name": "10 concurrent requests",
+      "Status": "PASS",
+      "Ms": 0,
+      "Detail": "10/10 200 OK in 694ms"
+    }
+  ]
+}

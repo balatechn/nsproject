@@ -10,8 +10,11 @@ export class ProjectsService {
 
   async create(dto: CreateProjectDto, userId: string) {
     const code = dto.code || `PRJ-${Date.now()}`;
+    const data: any = { ...dto, code, ownerId: userId };
+    if (dto.startDate) data.startDate = new Date(dto.startDate);
+    if (dto.endDate) data.endDate = new Date(dto.endDate);
     return this.prisma.project.create({
-      data: { ...dto, code, ownerId: userId },
+      data,
       include: {
         owner: { select: { id: true, firstName: true, lastName: true, avatar: true } },
         _count: { select: { tasks: true, members: true } },

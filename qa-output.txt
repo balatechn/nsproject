@@ -1,0 +1,225 @@
+
+=== 1. CONNECTIVITY ===
+
+=== 2. AUTH ===
+
+=== 3. RBAC / PROTECTED ENDPOINTS ===
+
+=== 4. CRUD ===
+
+=== 5. SECURITY ===
+
+=== 6. WEB PAGES ===
+
+=== 7. PERFORMANCE ===
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+Probe: D:\NsProject\scripts\qa-smoke.ps1:154:56
+Line |
+ 154 |    $times = 1..5 | ForEach-Object { (Probe GET "$Api$p" $H).Ms }
+     |                                                         ~~
+     | Cannot process argument transformation on parameter 'h'. Cannot convert
+     | the "Referrer-Policy" value of type "System.String" to type
+     | "System.Collections.Hashtable".
+
+=== SUMMARY ===
+PASS: 75 | FAIL: 4 | WARN: 18 | INFO: 1 | Total: 98
+
+--- Failures & Warnings ---
+
+[32;1mCat [0m[32;1m Name                                     [0m[32;1m Status[0m[32;1m Ms[0m[32;1m Detail[0m
+[32;1m--- [0m [32;1m----                                     [0m [32;1m------[0m [32;1m--[0m [32;1m------[0m
+Auth Login invalid email validation            WARN   70 HTTP 401
+Auth Login empty body validation               WARN   43 HTTP 401
+API  Auth GET /api/v1/dashboard/activity       FAIL   34 HTTP 500
+API  Auth GET /api/v1/dashboard/upcoming-tasks FAIL   29 HTTP 500
+CRUD Create project                            FAIL   53 HTTP 500 {"statusCode"
+                                                         :500,"message":"Intern
+                                                         al server error"}
+Sec  Web header X-Frame-Options                WARN    0 
+Sec  Web header X-Content-Type-Options         WARN    0 
+Sec  Web header Strict-Transport-Security      WARN    0 
+Sec  Web header Content-Security-Policy        WARN    0 
+Sec  Web header Referrer-Policy                WARN    0 
+Sec  Rate limiting (20 bad logins)             WARN    0 0 / 20 returned 429
+Sec  HTTPS enabled                             FAIL    0 Application served
+                                                         over plain HTTP only
+Web  GET /auth/register                        WARN   32 HTTP 404
+Web  GET /auth/forgot-password                 WARN   39 HTTP 404
+Web  GET /tasks                                WARN   32 HTTP 404
+Web  GET /workflows                            WARN   31 HTTP 404
+Web  GET /reports                              WARN   40 HTTP 404
+Web  GET /team                                 WARN   32 HTTP 404
+Web  GET /resources                            WARN   34 HTTP 404
+Web  GET /admin                                WARN   34 HTTP 404
+Web  GET /chat                                 WARN   33 HTTP 404
+Web  GET /settings                             WARN   33 HTTP 404
+
+
+Full report -> qa-report.json

@@ -59,10 +59,11 @@ export class DashboardService {
     };
   }
 
-  async getRecentActivity(userId: string, limit = 20) {
+  async getRecentActivity(userId: string, limit?: number) {
+    const take = Number(limit) > 0 ? Number(limit) : 20;
     return this.prisma.activityLog.findMany({
       where: { userId },
-      take: limit,
+      take,
       orderBy: { createdAt: 'desc' },
       include: {
         user: { select: { id: true, firstName: true, lastName: true, avatar: true } },
@@ -71,8 +72,9 @@ export class DashboardService {
     });
   }
 
-  async getUpcomingTasks(userId: string, days = 7) {
-    const dueBy = dayjs().add(days, 'day').toDate();
+  async getUpcomingTasks(userId: string, days?: number) {
+    const d = Number(days) > 0 ? Number(days) : 7;
+    const dueBy = dayjs().add(d, 'day').toDate();
     return this.prisma.task.findMany({
       where: {
         assigneeId: userId,
