@@ -6,14 +6,14 @@ COPY package.json package-lock.json turbo.json ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/database/package.json ./packages/database/
 
-# Install all deps (devDeps needed for build)
-ENV NODE_ENV=development
-RUN npm ci
+# Install all deps (devDeps needed for build) - keep default NODE_ENV unset for install
+RUN npm ci --include=dev
 
 # Copy full source
 COPY . .
 
-# Build Next.js app
+# Build Next.js app with production env (avoid dev react-dom prerender quirks)
+ENV NODE_ENV=production
 RUN npx turbo run build --filter=@nsproject/web
 
 FROM node:20-alpine AS runner
