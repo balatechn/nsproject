@@ -67,7 +67,7 @@ async function bootstrap() {
     });
   }
 
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
   console.log(`🚀 API running on: http://localhost:${port}/${apiPrefix}`);
   console.log(`📚 Swagger docs:   http://localhost:${port}/${apiPrefix}/docs`);
 }

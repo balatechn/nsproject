@@ -33,5 +33,5 @@ COPY --from=installer --chown=nestjs:nodejs /app/packages/database/prisma ./pris
 
 USER nestjs
 EXPOSE 4000
-CMD ["node", "dist/main.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy --schema=./prisma/schema.prisma || echo '[migrate] failed, continuing'; node dist/main.js"]
 
