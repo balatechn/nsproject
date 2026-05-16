@@ -1,6 +1,9 @@
 FROM node:20-alpine AS installer
 WORKDIR /app
 
+# OpenSSL needed by Prisma engine
+RUN apk add --no-cache openssl libc6-compat
+
 # Copy manifests first for layer caching
 COPY package.json package-lock.json turbo.json ./
 COPY apps/api/package.json ./apps/api/
@@ -23,6 +26,9 @@ RUN npm prune --omit=dev
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+
+# OpenSSL needed by Prisma engine at runtime
+RUN apk add --no-cache openssl libc6-compat
 
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nestjs
