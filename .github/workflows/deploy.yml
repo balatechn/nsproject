@@ -125,10 +125,10 @@ jobs:
     steps:
       - name: Trigger Coolify Deploy (API)
         run: |
-          curl -X GET "${{ secrets.COOLIFY_WEBHOOK_API }}" \
+          curl -s -X GET "http://187.127.134.246:8000/api/v1/applications/bj8dch8qutl5jbr5q1sqp0rm/start" \
             -H "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}"
 
       - name: Trigger Coolify Deploy (Web)
         run: |
-          curl -X GET "${{ secrets.COOLIFY_WEBHOOK_WEB }}" \
+          curl -s -X GET "http://187.127.134.246:8000/api/v1/applications/carx7dk6yfwk3ysxe4uurbnm/start" \
             -H "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}"
