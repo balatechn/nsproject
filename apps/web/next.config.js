@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
-  experimental: {
-    typedRoutes: true,
-  },
+  experimental: {},
   images: {
     domains: ['localhost', 'avatars.githubusercontent.com', 'lh3.googleusercontent.com'],
   },
