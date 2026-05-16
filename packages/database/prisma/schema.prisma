@@ -1,0 +1,898 @@
+// NsProject - Enterprise Project Management System
+// Prisma Schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING
+}
+
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+  ARCHIVED
+}
+
+enum ProjectPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum TaskStatus {
+  BACKLOG
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  DONE
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum WorkflowStatus {
+  ACTIVE
+  INACTIVE
+  DRAFT
+}
+
+enum NotificationType {
+  TASK_ASSIGNED
+  TASK_UPDATED
+  TASK_COMPLETED
+  PROJECT_UPDATED
+  MENTION
+  APPROVAL_REQUESTED
+  APPROVAL_APPROVED
+  APPROVAL_REJECTED
+  SLA_BREACH
+  COMMENT
+  WHATSAPP
+  SYSTEM
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  WHATSAPP
+  PUSH
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL
+  NEGOTIATION
+  WON
+  LOST
+}
+
+enum LeadPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ActivityType {
+  CREATE
+  UPDATE
+  DELETE
+  COMMENT
+  ASSIGN
+  STATUS_CHANGE
+  FILE_UPLOAD
+  LOGIN
+  LOGOUT
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  ESCALATED
+}
+
+enum ResourceType {
+  HUMAN
+  EQUIPMENT
+  MATERIAL
+  BUDGET
+}
+
+// ─────────────────────────────────────────────
+// USERS & AUTH
+// ─────────────────────────────────────────────
+
+model User {
+  id                String   @id @default(cuid())
+  email             String   @unique
+  username          String   @unique
+  password          String?
+  firstName         String
+  lastName          String
+  avatar            String?
+  phone             String?
+  whatsappNumber    String?
+  jobTitle          String?
+  department        String?
+  location          String?
+  timezone          String   @default("UTC")
+  status            UserStatus @default(ACTIVE)
+  emailVerified     Boolean  @default(false)
+  mfaEnabled        Boolean  @default(false)
+  mfaSecret         String?
+  lastLoginAt       DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  roleAssignments   UserRole[]
+  ownedProjects     Project[]  @relation("ProjectOwner")
+  memberProjects    ProjectMember[]
+  assignedTasks     Task[]     @relation("TaskAssignee")
+  createdTasks      Task[]     @relation("TaskCreator")
+  taskComments      TaskComment[]
+  notifications     Notification[]
+  activityLogs      ActivityLog[]
+  resources         Resource[]
+  teamMemberships   TeamMember[]
+  refreshTokens     RefreshToken[]
+  oauthAccounts     OAuthAccount[]
+  workflowApprovals WorkflowApproval[]
+  leadOwner         Lead[]     @relation("LeadOwner")
+  customerContacts  CustomerContact[]
+  timeEntries       TimeEntry[]
+  chatMessages      ChatMessage[]
+  createdWorkflows  Workflow[] @relation("WorkflowCreator")
+
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  permissions RolePermission[]
+  users       UserRole[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  resource    String
+  action      String
+  description String?
+  createdAt   DateTime @default(now())
+
+  roles       RolePermission[]
+
+  @@map("permissions")
+}
+
+model UserRole {
+  id        String   @id @default(cuid())
+  userId    String
+  roleId    String
+  createdAt DateTime @default(now())
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  id           String   @id @default(cuid())
+  roleId       String
+  permissionId String
+  createdAt    DateTime @default(now())
+
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+model OAuthAccount {
+  id             String   @id @default(cuid())
+  userId         String
+  provider       String
+  providerAccountId String
+  accessToken    String?
+  refreshToken   String?
+  expiresAt      DateTime?
+  createdAt      DateTime @default(now())
+
+  user           User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("oauth_accounts")
+}
+
+// ─────────────────────────────────────────────
+// ORGANIZATIONS & DEPARTMENTS
+// ─────────────────────────────────────────────
+
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  logo        String?
+  website     String?
+  industry    String?
+  size        String?
+  address     String?
+  city        String?
+  country     String?
+  timezone    String   @default("UTC")
+  settings    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  departments Department[]
+  locations   Location[]
+
+  @@map("organizations")
+}
+
+model Department {
+  id             String   @id @default(cuid())
+  name           String
+  description    String?
+  organizationId String
+  parentId       String?
+  headId         String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  parent         Department?   @relation("DeptHierarchy", fields: [parentId], references: [id])
+  children       Department[]  @relation("DeptHierarchy")
+  teams          Team[]
+
+  @@map("departments")
+}
+
+model Location {
+  id             String   @id @default(cuid())
+  name           String
+  address        String?
+  city           String?
+  state          String?
+  country        String?
+  organizationId String
+  createdAt      DateTime @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  projects       Project[]
+
+  @@map("locations")
+}
+
+model Team {
+  id           String   @id @default(cuid())
+  name         String
+  description  String?
+  departmentId String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  department   Department? @relation(fields: [departmentId], references: [id])
+  members      TeamMember[]
+  projects     ProjectMember[]
+
+  @@map("teams")
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  teamId    String
+  userId    String
+  role      String?
+  createdAt DateTime @default(now())
+
+  team      Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, userId])
+  @@map("team_members")
+}
+
+// ─────────────────────────────────────────────
+// PROJECTS
+// ─────────────────────────────────────────────
+
+model Project {
+  id               String          @id @default(cuid())
+  name             String
+  description      String?
+  code             String          @unique
+  status           ProjectStatus   @default(PLANNING)
+  priority         ProjectPriority @default(MEDIUM)
+  startDate        DateTime?
+  endDate          DateTime?
+  baselineStart    DateTime?
+  baselineEnd      DateTime?
+  budget           Decimal?        @db.Decimal(15, 2)
+  budgetUsed       Decimal?        @db.Decimal(15, 2)
+  progress         Int             @default(0)
+  color            String?
+  tags             String[]
+  settings         Json?
+  ownerId          String
+  locationId       String?
+  templateId       String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  owner            User            @relation("ProjectOwner", fields: [ownerId], references: [id])
+  location         Location?       @relation(fields: [locationId], references: [id])
+  members          ProjectMember[]
+  tasks            Task[]
+  milestones       Milestone[]
+  workflows        Workflow[]
+  attachments      Attachment[]
+  activityLogs     ActivityLog[]
+  timeEntries      TimeEntry[]
+  risks            Risk[]
+  chatRooms        ChatRoom[]
+
+  @@map("projects")
+}
+
+model ProjectMember {
+  id        String   @id @default(cuid())
+  projectId String
+  userId    String?
+  teamId    String?
+  role      String   @default("MEMBER")
+  joinedAt  DateTime @default(now())
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user      User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team      Team?   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+  @@map("project_members")
+}
+
+model Milestone {
+  id          String    @id @default(cuid())
+  projectId   String
+  name        String
+  description String?
+  dueDate     DateTime?
+  completedAt DateTime?
+  progress    Int       @default(0)
+  color       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+
+  @@map("milestones")
+}
+
+model Risk {
+  id          String   @id @default(cuid())
+  projectId   String
+  title       String
+  description String?
+  probability String?
+  impact      String?
+  mitigation  String?
+  status      String   @default("OPEN")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("risks")
+}
+
+// ─────────────────────────────────────────────
+// TASKS
+// ─────────────────────────────────────────────
+
+model Task {
+  id              String       @id @default(cuid())
+  projectId       String
+  milestoneId     String?
+  parentId        String?
+  title           String
+  description     String?
+  status          TaskStatus   @default(TODO)
+  priority        TaskPriority @default(MEDIUM)
+  assigneeId      String?
+  creatorId       String
+  startDate       DateTime?
+  dueDate         DateTime?
+  completedAt     DateTime?
+  estimatedHours  Decimal?     @db.Decimal(8, 2)
+  loggedHours     Decimal?     @db.Decimal(8, 2)
+  progress        Int          @default(0)
+  order           Int          @default(0)
+  tags            String[]
+  slaHours        Int?
+  slaBreached     Boolean      @default(false)
+  isRecurring     Boolean      @default(false)
+  recurringConfig Json?
+  dependencies    String[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  project         Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  milestone       Milestone?   @relation(fields: [milestoneId], references: [id])
+  parent          Task?        @relation("TaskHierarchy", fields: [parentId], references: [id])
+  subtasks        Task[]       @relation("TaskHierarchy")
+  assignee        User?        @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  creator         User         @relation("TaskCreator", fields: [creatorId], references: [id])
+  comments        TaskComment[]
+  attachments     Attachment[]
+  activityLogs    ActivityLog[]
+  timeEntries     TimeEntry[]
+  customFields    TaskCustomField[]
+
+  @@map("tasks")
+}
+
+model TaskComment {
+  id        String   @id @default(cuid())
+  taskId    String
+  userId    String
+  content   String
+  mentions  String[]
+  isEdited  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("task_comments")
+}
+
+model TaskCustomField {
+  id        String   @id @default(cuid())
+  taskId    String
+  fieldKey  String
+  fieldValue String
+  createdAt DateTime @default(now())
+
+  task      Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, fieldKey])
+  @@map("task_custom_fields")
+}
+
+model TimeEntry {
+  id          String   @id @default(cuid())
+  taskId      String?
+  projectId   String
+  userId      String
+  description String?
+  startTime   DateTime
+  endTime     DateTime?
+  duration    Decimal? @db.Decimal(8, 2)
+  isBillable  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  task        Task?    @relation(fields: [taskId], references: [id])
+  project     Project  @relation(fields: [projectId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@map("time_entries")
+}
+
+// ─────────────────────────────────────────────
+// RESOURCES
+// ─────────────────────────────────────────────
+
+model Resource {
+  id           String       @id @default(cuid())
+  name         String
+  type         ResourceType @default(HUMAN)
+  userId       String?
+  skills       String[]
+  availability Decimal      @default(100) @db.Decimal(5, 2)
+  costPerHour  Decimal?     @db.Decimal(10, 2)
+  currency     String       @default("USD")
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  user         User?        @relation(fields: [userId], references: [id])
+  allocations  ResourceAllocation[]
+  leaves       LeaveEntry[]
+
+  @@map("resources")
+}
+
+model ResourceAllocation {
+  id          String   @id @default(cuid())
+  resourceId  String
+  projectId   String
+  taskId      String?
+  allocation  Decimal  @db.Decimal(5, 2)
+  startDate   DateTime
+  endDate     DateTime
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  resource    Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@map("resource_allocations")
+}
+
+model LeaveEntry {
+  id         String   @id @default(cuid())
+  resourceId String
+  leaveType  String
+  startDate  DateTime
+  endDate    DateTime
+  notes      String?
+  approved   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@map("leave_entries")
+}
+
+// ─────────────────────────────────────────────
+// WORKFLOWS & AUTOMATION
+// ─────────────────────────────────────────────
+
+model Workflow {
+  id          String         @id @default(cuid())
+  name        String
+  description String?
+  projectId   String?
+  creatorId   String
+  status      WorkflowStatus @default(DRAFT)
+  trigger     Json
+  conditions  Json?
+  actions     Json
+  n8nWorkflowId String?
+  runCount    Int            @default(0)
+  lastRunAt   DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  project     Project?       @relation(fields: [projectId], references: [id])
+  creator     User           @relation("WorkflowCreator", fields: [creatorId], references: [id])
+  approvals   WorkflowApproval[]
+  runs        WorkflowRun[]
+
+  @@map("workflows")
+}
+
+model WorkflowRun {
+  id         String   @id @default(cuid())
+  workflowId String
+  status     String
+  input      Json?
+  output     Json?
+  error      String?
+  startedAt  DateTime @default(now())
+  finishedAt DateTime?
+
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@map("workflow_runs")
+}
+
+model WorkflowApproval {
+  id          String         @id @default(cuid())
+  workflowId  String
+  approverId  String
+  status      ApprovalStatus @default(PENDING)
+  comment     String?
+  requestedAt DateTime       @default(now())
+  respondedAt DateTime?
+
+  workflow    Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  approver    User     @relation(fields: [approverId], references: [id])
+
+  @@map("workflow_approvals")
+}
+
+// ─────────────────────────────────────────────
+// NOTIFICATIONS
+// ─────────────────────────────────────────────
+
+model Notification {
+  id         String              @id @default(cuid())
+  userId     String
+  type       NotificationType
+  channel    NotificationChannel @default(IN_APP)
+  title      String
+  message    String
+  data       Json?
+  isRead     Boolean             @default(false)
+  readAt     DateTime?
+  sentAt     DateTime?
+  createdAt  DateTime            @default(now())
+
+  user       User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+// ─────────────────────────────────────────────
+// ATTACHMENTS
+// ─────────────────────────────────────────────
+
+model Attachment {
+  id         String   @id @default(cuid())
+  projectId  String?
+  taskId     String?
+  uploadedBy String
+  filename   String
+  originalName String
+  mimeType   String
+  size       Int
+  url        String
+  bucket     String?
+  key        String?
+  createdAt  DateTime @default(now())
+
+  project    Project? @relation(fields: [projectId], references: [id])
+  task       Task?    @relation(fields: [taskId], references: [id])
+
+  @@map("attachments")
+}
+
+// ─────────────────────────────────────────────
+// ACTIVITY LOGS
+// ─────────────────────────────────────────────
+
+model ActivityLog {
+  id         String       @id @default(cuid())
+  userId     String
+  projectId  String?
+  taskId     String?
+  type       ActivityType
+  entity     String
+  entityId   String
+  action     String
+  oldValue   Json?
+  newValue   Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime     @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+  project    Project? @relation(fields: [projectId], references: [id])
+  task       Task?    @relation(fields: [taskId], references: [id])
+
+  @@map("activity_logs")
+}
+
+// ─────────────────────────────────────────────
+// CHAT
+// ─────────────────────────────────────────────
+
+model ChatRoom {
+  id          String   @id @default(cuid())
+  name        String?
+  projectId   String?
+  isGroup     Boolean  @default(false)
+  participants String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project     Project? @relation(fields: [projectId], references: [id])
+  messages    ChatMessage[]
+
+  @@map("chat_rooms")
+}
+
+model ChatMessage {
+  id         String   @id @default(cuid())
+  roomId     String
+  senderId   String
+  content    String
+  type       String   @default("TEXT")
+  metadata   Json?
+  isEdited   Boolean  @default(false)
+  isDeleted  Boolean  @default(false)
+  readBy     String[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  room       ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  sender     User     @relation(fields: [senderId], references: [id])
+
+  @@map("chat_messages")
+}
+
+// ─────────────────────────────────────────────
+// CRM
+// ─────────────────────────────────────────────
+
+model Lead {
+  id           String       @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String?
+  phone        String?
+  company      String?
+  source       String?
+  status       LeadStatus   @default(NEW)
+  priority     LeadPriority @default(MEDIUM)
+  value        Decimal?     @db.Decimal(15, 2)
+  currency     String       @default("USD")
+  notes        String?
+  tags         String[]
+  ownerId      String
+  convertedAt  DateTime?
+  customerId   String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  owner        User        @relation("LeadOwner", fields: [ownerId], references: [id])
+  customer     Customer?   @relation(fields: [customerId], references: [id])
+  interactions Interaction[]
+  followUps    FollowUp[]
+
+  @@map("leads")
+}
+
+model Customer {
+  id           String   @id @default(cuid())
+  companyName  String
+  email        String?
+  phone        String?
+  website      String?
+  industry     String?
+  address      String?
+  city         String?
+  country      String?
+  notes        String?
+  tags         String[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  leads        Lead[]
+  contacts     CustomerContact[]
+  interactions Interaction[]
+
+  @@map("customers")
+}
+
+model CustomerContact {
+  id         String   @id @default(cuid())
+  customerId String
+  userId     String
+  firstName  String
+  lastName   String
+  email      String?
+  phone      String?
+  role       String?
+  createdAt  DateTime @default(now())
+
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@map("customer_contacts")
+}
+
+model Interaction {
+  id          String   @id @default(cuid())
+  leadId      String?
+  customerId  String?
+  type        String
+  subject     String?
+  notes       String?
+  date        DateTime
+  createdAt   DateTime @default(now())
+
+  lead        Lead?     @relation(fields: [leadId], references: [id])
+  customer    Customer? @relation(fields: [customerId], references: [id])
+
+  @@map("interactions")
+}
+
+model FollowUp {
+  id         String   @id @default(cuid())
+  leadId     String
+  title      String
+  notes      String?
+  dueDate    DateTime
+  completed  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  lead       Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@map("follow_ups")
+}
+
+// ─────────────────────────────────────────────
+// ANALYTICS
+// ─────────────────────────────────────────────
+
+model AnalyticsSnapshot {
+  id        String   @id @default(cuid())
+  type      String
+  data      Json
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@map("analytics_snapshots")
+}
+
+// ─────────────────────────────────────────────
+// SYSTEM SETTINGS
+// ─────────────────────────────────────────────
+
+model SystemSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  category  String?
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@map("system_settings")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  resource  String
+  resourceId String?
+  details   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}

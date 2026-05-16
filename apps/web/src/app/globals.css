@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 152 69% 31%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 214 80% 56%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 152 69% 31%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 152 69% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 214 80% 56%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 152 69% 40%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { @apply bg-muted; }
+::-webkit-scrollbar-thumb { @apply bg-muted-foreground/30 rounded-full; }
+::-webkit-scrollbar-thumb:hover { @apply bg-muted-foreground/50; }
+
+/* Skeleton loader */
+.skeleton {
+  @apply animate-pulse bg-muted rounded;
+}
+
+/* Gantt chart styles */
+.gantt-container { overflow-x: auto; }
+.gantt-bar {
+  @apply rounded h-6 flex items-center px-2 text-xs text-white font-medium cursor-pointer transition-opacity hover:opacity-80;
+}
+
+/* Priority badges */
+.priority-low { @apply bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300; }
+.priority-medium { @apply bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300; }
+.priority-high { @apply bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300; }
+.priority-urgent { @apply bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300; }
+
+/* Status badges */
+.status-todo { @apply bg-gray-100 text-gray-700; }
+.status-in-progress { @apply bg-blue-100 text-blue-700; }
+.status-in-review { @apply bg-purple-100 text-purple-700; }
+.status-done { @apply bg-green-100 text-green-700; }
+.status-cancelled { @apply bg-red-100 text-red-700; }
