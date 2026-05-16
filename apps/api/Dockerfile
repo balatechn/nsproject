@@ -34,5 +34,5 @@ COPY --from=installer --chown=nestjs:nodejs /app/packages/database/seed.js ./see
 
 USER nestjs
 EXPOSE 4000
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=./prisma/schema.prisma || echo '[migrate] failed, continuing'; node seed.js || echo '[seed] failed, continuing'; node dist/main.js"]
+CMD ["sh", "-c", "npx prisma db push --schema=./prisma/schema.prisma --accept-data-loss --skip-generate || echo '[db push] failed, continuing'; node seed.js || echo '[seed] failed, continuing'; node dist/main.js"]
 
