@@ -10,7 +10,7 @@ export class TasksService {
 
   async create(dto: CreateTaskDto, creatorId: string) {
     return this.prisma.task.create({
-      data: { ...dto, creatorId },
+      data: { ...dto, creatorId } as any,
       include: {
         assignee: { select: { id: true, firstName: true, lastName: true, avatar: true } },
         creator: { select: { id: true, firstName: true, lastName: true } },
@@ -78,7 +78,7 @@ export class TasksService {
 
   async update(id: string, dto: UpdateTaskDto) {
     await this.findOne(id);
-    return this.prisma.task.update({ where: { id }, data: dto, include: {
+    return this.prisma.task.update({ where: { id }, data: dto as any, include: {
       assignee: { select: { id: true, firstName: true, lastName: true, avatar: true } },
     } });
   }
