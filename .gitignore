@@ -16,3 +16,5 @@ prisma/migrations/dev/
 apps/api/uploads/
 apps/web/uploads/
 .DS_Store
+
+login.json
