@@ -30,8 +30,9 @@ RUN addgroup --system --gid 1001 nodejs && \
 COPY --from=installer --chown=nestjs:nodejs /app/apps/api/dist ./dist
 COPY --from=installer --chown=nestjs:nodejs /app/node_modules ./node_modules
 COPY --from=installer --chown=nestjs:nodejs /app/packages/database/prisma ./prisma
+COPY --from=installer --chown=nestjs:nodejs /app/packages/database/seed.js ./seed.js
 
 USER nestjs
 EXPOSE 4000
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=./prisma/schema.prisma || echo '[migrate] failed, continuing'; node dist/main.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy --schema=./prisma/schema.prisma || echo '[migrate] failed, continuing'; node seed.js || echo '[seed] failed, continuing'; node dist/main.js"]
 
