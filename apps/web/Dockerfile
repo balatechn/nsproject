@@ -4,15 +4,16 @@ RUN npm install -g turbo
 
 FROM base AS builder
 COPY . .
-RUN turbo prune --scope=web --docker
+RUN turbo prune @nsproject/web --docker
 
 FROM base AS installer
+WORKDIR /app
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/package-lock.json ./package-lock.json
 RUN npm ci
 
 COPY --from=builder /app/out/full/ .
-RUN turbo run build --filter=web
+RUN npx turbo run build --filter=web
 
 FROM node:20-alpine AS runner
 WORKDIR /app
