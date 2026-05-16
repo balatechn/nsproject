@@ -7,6 +7,7 @@ COPY apps/api/package.json ./apps/api/
 COPY packages/database/package.json ./packages/database/
 
 # Install all deps (devDeps needed for build)
+ENV NODE_ENV=development
 RUN npm ci
 
 # Copy full source
